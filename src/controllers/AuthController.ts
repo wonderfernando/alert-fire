@@ -1,7 +1,7 @@
 import { Prisma } from "@prisma/client";
 import { Request, Response } from "express";
 import { z, ZodError } from "zod";
-import { generateHash, my_env, prismaClient } from "../utils";
+import { blackList, generateHash, my_env, prismaClient } from "../utils";
 import  jwt ,{ verify } from "jsonwebtoken";
 const login_validation = z.object({
     email: z.string().email(),
@@ -37,10 +37,14 @@ export class AuthController {
 
     public logout = async (req: Request, res:Response) => {
         try {
-           
+            let token = req.headers.authorization
+            console.log("11111")
+            blackList(String(token))
+            console.log("safdbhsafiosgefiougeiuofgewiufg")
+            return (res.status(200).json({}))
         }catch(error)
-        {
-           
+        {  console.log("2222222")
+            return (res.status(500).json({"error":"Internal Server Error", "message": " Problemas ao salvar o usuário no banco de dados devido a erros inesperados ou falhas de configuração.", isOk:false}))
         }
     }
 
